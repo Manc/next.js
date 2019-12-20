@@ -62,6 +62,14 @@ export default class MyDocument extends Document {
     return (
       <Html className="test-html-props">
         <Head nonce="test-nonce">
+          <meta charSet="iso-8859-1" key="charSet" />
+          <meta name="viewport" content="width=500" key="viewport" />
+          <meta
+            name="description"
+            content="Document description"
+            key="description"
+          />
+
           {csp ? (
             <meta httpEquiv="Content-Security-Policy" content={csp} />
           ) : null}

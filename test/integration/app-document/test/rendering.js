@@ -31,6 +31,28 @@ export default function({ app }, suiteName, render, fetch) {
         )
       })
 
+      test('It dedupes head tags with the same key', async () => {
+        const $ = await get$('/about')
+
+        // Expect only one charset, in this case from the document, not the default.
+        const metaCharSets = $('head meta[charSet]')
+        expect(metaCharSets.length).toBe(1)
+        expect(metaCharSets[0].attr('charSet')).toBe('iso-8859-1')
+
+        // Expect only one viewport, in this case from the document, not the default.
+        const metaViewports = $('head meta[name="viewport"]')
+        expect(metaViewports.length).toBe(1)
+        expect(metaViewports[0].attr('content')).toBe('width=500')
+
+        // Expect the page's description to override the document's description.
+        const metaDescriptions = $('head meta[name="description"]')
+        expect(metaDescriptions.length).toBe(1)
+        expect(metaDescriptions[0].attr('content')).toBe('About us')
+
+        // Expect title to come from the page.
+        expect($('head title').text()).toBe('About')
+      })
+
       test('It passes props from Document.getInitialProps to Document', async () => {
         const $ = await get$('/')
         expect($('#custom-property').text() === 'Hello Document')
